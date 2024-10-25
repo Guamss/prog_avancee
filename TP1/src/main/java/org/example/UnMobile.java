@@ -1,29 +1,69 @@
 package org.example;
 
+import java.util.Random;
 import java.awt.*;
 import javax.swing.*;
 
 class UnMobile extends JPanel implements Runnable {
-	int saLargeur, saHauteur, sonDebDessin;
-	final int sonPas = 10, sonTemps = 50, sonCote = 40;
+	private int saLargeur, saHauteur, sonDebDessin;
+	private final int sonPas = 10, sonCote = 40;
+	private UneFenetre fenetre;
+	private int sonTemps;
+	private int mobileID;
 
-	UnMobile(int telleLargeur, int telleHauteur) {
+	UnMobile(int id, int telleLargeur, int telleHauteur, UneFenetre fenetre) {
 		super();
+		Random r = new Random();
+		mobileID = id;
 		saLargeur = telleLargeur;
 		saHauteur = telleHauteur;
 		setSize(telleLargeur, telleHauteur);
+		this.fenetre = fenetre;
+		sonTemps = 30 + r.nextInt(2201);
 	}
 
 	public void run() {
-		for (sonDebDessin = 0; sonDebDessin < saLargeur - sonPas; sonDebDessin += sonPas) {
-			repaint();
+		while (true) {
+			for (sonDebDessin = 0; sonDebDessin < saLargeur / 3; sonDebDessin += sonPas) {
+				repaint();
+				try {
+					Thread.sleep(sonTemps);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			for (sonDebDessin = saLargeur; sonDebDessin < saLargeur / 3; sonDebDessin -= sonPas) {
+				repaint();
+				try {
+					Thread.sleep(sonTemps);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+
 			try {
-				Thread.sleep(sonTemps);
-			} catch (InterruptedException telleExcp) {
-				telleExcp.printStackTrace();
+				fenetre.semaphore.acquire();
+				for (; sonDebDessin < 2 * saLargeur / 3; sonDebDessin += sonPas) {
+					repaint();
+					Thread.sleep(sonTemps);
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} finally {
+				fenetre.semaphore.release();
+			}
+
+			for (; sonDebDessin < saLargeur; sonDebDessin += sonPas) {
+				repaint();
+				try {
+					Thread.sleep(sonTemps);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
+
 
 	public void paintComponent(Graphics telCG) {
 		super.paintComponent(telCG);
