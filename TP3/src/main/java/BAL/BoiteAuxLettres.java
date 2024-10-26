@@ -1,3 +1,5 @@
+package BAL;
+
 public class BoiteAuxLettres {
     private char lettre;
     private boolean avalaible;
@@ -16,7 +18,6 @@ public class BoiteAuxLettres {
     }
 
     synchronized public char read() {
-        System.out.println(lettre);
         char lettreRetire = lettre;
         lettre = '\0';
         return lettreRetire;
