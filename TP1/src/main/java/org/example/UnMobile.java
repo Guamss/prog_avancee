@@ -1,72 +1,78 @@
 package org.example;
 
-import java.util.Random;
-import java.awt.*;
 import javax.swing.*;
+import java.awt.*;
 
-class UnMobile extends JPanel implements Runnable {
-	private int saLargeur, saHauteur, sonDebDessin;
-	private final int sonPas = 10, sonCote = 40;
-	private UneFenetre fenetre;
-	private int sonTemps;
-	private int mobileID;
+import java.util.Random;
 
-	UnMobile(int id, int telleLargeur, int telleHauteur, UneFenetre fenetre) {
-		super();
-		Random r = new Random();
-		mobileID = id;
-		saLargeur = telleLargeur;
-		saHauteur = telleHauteur;
-		setSize(telleLargeur, telleHauteur);
-		this.fenetre = fenetre;
-		sonTemps = 30 + r.nextInt(2201);
+class UnMobile extends JPanel implements Runnable
+{
+	int saLargeur, saHauteur, sonDebutDessin, sonTemps;
+	final int sonPas = 10, sonCote= 40;
+	Semaphore semaphore;
+	public UnMobile( int telleLargeur, int telleHauteur, Semaphore semaphore)
+	{
+			super();
+			this.semaphore = semaphore;
+			Random r = new Random();
+			sonTemps = 50 + r.nextInt(150);
+			saLargeur= telleLargeur;saHauteur= telleHauteur;
+			setSize(telleLargeur, telleHauteur);
 	}
 
-	public void run() {
-		while (true) {
-			for (sonDebDessin = 0; sonDebDessin < saLargeur / 3; sonDebDessin += sonPas) {
-				repaint();
-				try {
-					Thread.sleep(sonTemps);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			for (sonDebDessin = saLargeur; sonDebDessin < saLargeur / 3; sonDebDessin -= sonPas) {
-				repaint();
-				try {
-					Thread.sleep(sonTemps);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-
-			try {
-				fenetre.semaphore.acquire();
-				for (; sonDebDessin < 2 * saLargeur / 3; sonDebDessin += sonPas) {
-					repaint();
-					Thread.sleep(sonTemps);
-				}
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} finally {
-				fenetre.semaphore.release();
-			}
-
-			for (; sonDebDessin < saLargeur; sonDebDessin += sonPas) {
-				repaint();
-				try {
-					Thread.sleep(sonTemps);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
+	@Override
+	public void run()
+	{
+		// Avancer
+		for (sonDebutDessin=0; sonDebutDessin *3 < saLargeur - sonPas; sonDebutDessin+= sonPas)
+		{
+			repaint();
+			try{Thread.sleep(sonTemps);}
+			catch (InterruptedException telleExcp)
+			{telleExcp.printStackTrace();}
+		}
+		semaphore.syncWait();
+		for (sonDebutDessin=saLargeur/3; (3*sonDebutDessin/2) < saLargeur - sonPas; sonDebutDessin+= sonPas)
+		{
+			repaint();
+			try{Thread.sleep(sonTemps);}
+			catch (InterruptedException telleExcp)
+			{telleExcp.printStackTrace();}
+		}
+		semaphore.syncSignal();
+		for (sonDebutDessin=2*saLargeur/3; sonDebutDessin < saLargeur - sonPas; sonDebutDessin+= sonPas)
+		{
+			repaint();
+			try{Thread.sleep(sonTemps);}
+			catch (InterruptedException telleExcp)
+			{telleExcp.printStackTrace();}
+		}
+		for(sonDebutDessin=saLargeur;sonDebutDessin> (saLargeur/3)*2;sonDebutDessin-=sonPas ){
+			repaint();
+			try{Thread.sleep(sonTemps);}
+			catch (InterruptedException telleExcp)
+			{telleExcp.printStackTrace();}
+		}
+		semaphore.syncWait();
+		for(sonDebutDessin=(saLargeur/3)*2;sonDebutDessin> saLargeur/3;sonDebutDessin-=sonPas ){
+			repaint();
+			try{Thread.sleep(sonTemps);}
+			catch (InterruptedException telleExcp)
+			{telleExcp.printStackTrace();}
+		}
+		semaphore.syncSignal();
+		for(sonDebutDessin=saLargeur/3;sonDebutDessin> sonPas;sonDebutDessin-=sonPas ){
+			repaint();
+			try{Thread.sleep(sonTemps);}
+			catch (InterruptedException telleExcp)
+			{telleExcp.printStackTrace();}
 		}
 	}
 
-
-	public void paintComponent(Graphics telCG) {
-		super.paintComponent(telCG);
-		telCG.fillRect(sonDebDessin, saHauteur / 2, sonCote, sonCote);
+	public void paintComponent(Graphics telContexteGraphique)
+	{
+		super.paintComponent( telContexteGraphique );
+		telContexteGraphique.fillRect( sonDebutDessin, saHauteur/2, sonCote, sonCote);
 	}
+
 }
