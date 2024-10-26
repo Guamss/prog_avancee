@@ -10,18 +10,29 @@ import java.lang.String;
 class Exclusion{};
 public class Affichage extends Thread{
 	String texte; 
-        
+	Semaphore semaphore;
+
      static Exclusion exclusionMutuelle = new Exclusion();
 
-	public Affichage (String txt){texte=txt;}
+	public Affichage (String txt, Semaphore semaphore){
+		texte=txt;
+		this.semaphore = semaphore;
+	}
 	
-	public void run(){
-
-	    synchronized (exclusionMutuelle) { //section critique
-	    for (int i=0; i<texte.length(); i++){
-		    System.out.print(texte.charAt(i));
-		    try {sleep(100);} catch(InterruptedException e){};
+	public void run() {
+		semaphore.syncWait();
+		for (int i = 0; i < texte.length(); i++)
+		{
+			System.out.print(texte.charAt(i));
+			try
+			{
+				sleep(100);
+			}
+			catch (InterruptedException e)
+			{
+				System.out.println(e);
+			}
 		}
-	    }
+		semaphore.syncSignal();
 	}
 }
