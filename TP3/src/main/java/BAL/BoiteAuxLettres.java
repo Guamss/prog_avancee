@@ -1,15 +1,15 @@
 package BAL;
 
 public class BoiteAuxLettres {
-    private char lettre;
+    private String lettre;
     private boolean avalaible;
 
-    public BoiteAuxLettres(char lettre) {
-        this.lettre = lettre;
+    public BoiteAuxLettres() {
+        this.lettre = "";
         this.avalaible = true;
     }
 
-    synchronized public void write(char bufferContent) {
+    synchronized public void write(String bufferContent) {
         if (avalaible) {
             avalaible = false;
             lettre = bufferContent;
@@ -17,9 +17,7 @@ public class BoiteAuxLettres {
         }
     }
 
-    synchronized public char read() {
-        char lettreRetire = lettre;
-        lettre = '\0';
-        return lettreRetire;
+    synchronized public String read() {
+        return lettre;
     }
 }

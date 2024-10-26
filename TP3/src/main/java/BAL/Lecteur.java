@@ -1,13 +1,19 @@
 package BAL;
 
+import java.util.Objects;
+
+import static java.lang.System.exit;
+
 public class Lecteur implements Runnable {
 
     private BoiteAuxLettres boiteAuxLettres;
-    private char bufferContent;
+    private String bufferContent;
+    private Semaphore semaphore;
 
-    public Lecteur(BoiteAuxLettres boiteAuxLettres) {
+    public Lecteur(BoiteAuxLettres boiteAuxLettres, Semaphore semaphore) {
         this.boiteAuxLettres = boiteAuxLettres;
-        bufferContent = '\0';
+        this.semaphore = semaphore;
+        bufferContent = "";
     }
 
     @Override
@@ -15,12 +21,22 @@ public class Lecteur implements Runnable {
         while (true) {
             try {
                 Thread.sleep(1000);
+                semaphore.syncWait();
                 bufferContent = boiteAuxLettres.read();
-                if (bufferContent != '\0') {
+                if (Objects.equals(bufferContent.toLowerCase(), "q"))
+                {
+                    System.out.println("Lecteur: Ok, je m'arrête");
+                    exit(0);
+                }
+                else if (!bufferContent.equals(""))
+                {
                     System.out.println("Lecteur: Je lis '" + bufferContent + "'");
-                } else {
+                }
+                else
+                {
                     System.out.println("Lecteur: Il n'y a rien dans la boîte aux lettres");
                 }
+                semaphore.syncSignal();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
