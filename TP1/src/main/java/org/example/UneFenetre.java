@@ -4,18 +4,16 @@ import java.awt.*;
 import org.example.Semaphore;
 import javax.swing.*;
 
-class UneFenetre extends JFrame 
-{
+class UneFenetre extends JFrame {
     UnMobile mobile1;
     UnMobile mobile2;
     UnMobile mobile3;
     Semaphore semaphore;
-    private final int LARG=800, HAUT=250;
-    
-    public UneFenetre()
-    {
+    private final int LARG = 800, HAUT = 250;
+
+    public UneFenetre() {
         super("le Mobile");
-        setLayout (new GridLayout(3, 3));
+        setLayout(new GridLayout(3, 3));
         semaphore = new SemaphoreGeneral(1);
 
         mobile1 = new UnMobile(LARG, HAUT, semaphore);
