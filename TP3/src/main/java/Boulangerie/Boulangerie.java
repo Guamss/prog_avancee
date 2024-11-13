@@ -15,6 +15,10 @@ public class Boulangerie {
         return panier.take();
     }
 
+    public void deposerPainEmpoisonne() throws InterruptedException {
+        panier.put(Pain.PAIN_EMPOISONNE);
+    }
+
     public void deposer(Pain pain) throws InterruptedException {
         panier.put(pain);
     }

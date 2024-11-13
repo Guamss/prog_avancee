@@ -20,6 +20,10 @@ public class Client implements Runnable{
                 Thread.sleep(3500);
                 int stock = boulangerie.getStock();
                 Pain pain = boulangerie.acheter();
+                if (pain == Pain.PAIN_EMPOISONNE) {
+                    System.out.println("Client " + nom + ": JE MEURS");
+                    Thread.currentThread().interrupt();
+                }
                 System.out.println("Client " + nom +": J'achète du pain");
 
                 if (stock > 0)
