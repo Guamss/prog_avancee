@@ -24,9 +24,8 @@ public class Producteur implements Runnable {
                 Thread.sleep(1000);
                 semaphore.syncWait();
                 Scanner scanner = new Scanner(System.in);
-
                 System.out.print("Entrez une lettre : ");
-                String bufferContent = scanner.next();
+                bufferContent = scanner.next();
                 boiteAuxLettres.write(bufferContent);
                 System.out.println("Producteur: J'écris '" + bufferContent + "' dans la boîte aux lettres");
                 

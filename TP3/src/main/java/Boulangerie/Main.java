@@ -2,7 +2,7 @@ package Boulangerie;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         Boulangerie boulangerie = new Boulangerie(20);
         Boulanger boulanger = new Boulanger(boulangerie);
         Client baptiste = new Client(boulangerie, "Baptiste");
@@ -16,5 +16,17 @@ public class Main {
         baptisteThread.start();
         alexisThread.start();
         sebThread.start();
+
+        try {
+            Thread.sleep(10000);
+        }
+        catch (Exception e) {
+            System.out.println(e);
+        }
+        boulangerThread.interrupt();
+
+        for (int i = 0; i < 3; i++) {
+            boulangerie.deposerPainEmpoisonne();
+        }
     }
 }
