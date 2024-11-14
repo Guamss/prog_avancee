@@ -26,7 +26,7 @@ public class Producteur implements Runnable {
                 Scanner scanner = new Scanner(System.in);
 
                 System.out.print("Entrez une lettre : ");
-                String bufferContent = scanner.next();
+                bufferContent = scanner.next();
                 boiteAuxLettres.write(bufferContent);
                 if (!Objects.equals(boiteAuxLettres.read(), "")) {
                     System.out.println("Producteur: J'écris '" + bufferContent + "' dans la boîte aux lettres");
