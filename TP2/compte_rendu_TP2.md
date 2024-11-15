@@ -9,7 +9,7 @@ Dans ce TP le principe de semaphore et l'instruction synchronized sont abordés.
 
 ***
 ### <u>Contexte</u>
-Le problème ici est que, deux threads vont vouloir accéder à une même tâche en même temps (qui est de d'imprimer une suite de lettre) mais leurs tâches vont s'entremêler, il faut donc tout d'abord déterminer dans le code qu'est-ce que la zone critique. On a un code de la sorte dans la classe `Affichage.java`
+Le problème ici est que, deux threads vont vouloir accéder à une même tâche en même temps (qui est de d'imprimer une suite de lettre) mais leurs tâches vont s'entremêler, il faut donc tout d'abord déterminer dans le code qu'est-ce que la section critique. On a un code de la sorte dans la classe `Affichage.java`
 ```java
 public class Affichage extends Thread {
     String texte;
@@ -33,11 +33,11 @@ public class Affichage extends Thread {
 
 Voici la conception du code UML du code
 ![conception.png](conception.png)
-### <u>La ressource critique</u>
+### <u>La section critique</u>
 
-La zone critique ici est la boucle for, car c'est l'action à ne pas exécuter en même temps par les threads, une fois qu'un thread a fini son print il laisse place à un autre thread pour imprimer. Il y a plusieurs manières de faire en Java pour que les tâches des threads n'entrent pas en conflit :
+La section critique ici est la boucle for, car c'est l'action à ne pas exécuter en même temps par les threads, une fois qu'un thread a fini son print il laisse place à un autre thread pour imprimer. Il y a plusieurs manières de faire en Java pour que les tâches des threads n'entrent pas en conflit :
 
-* Avec l'utilisation de `synchronized`. Quand on utilise cette instruction, Java utilise de manière interne un moniteur, le moniteur va gérer les accès à la ressource critique qui peut être une méthode, ou un bloc de code (ici c'est un bloc de code).
+* Avec l'utilisation de `synchronized`. Quand on utilise cette instruction, Java utilise de manière interne un moniteur, le moniteur va gérer les accès à la donnée, mais ce qui est le plus important c'est que l'instruction `synchronized` va mettre un verrou MUTEX sur la section critique qui peut être une méthode, ou un bloc de code (ici c'est un bloc de code).
 ```java
 public void run() {
     synchronized (this) {
@@ -52,7 +52,7 @@ public void run() {
     }
 }
 ```
-* Avec l'utilisation d'un Sémaphore qui va aussi gérer les accès à la ressource critique. Voici l'implémentation de la classe `Sémaphore.java`.
+* Avec l'utilisation d'un Sémaphore qui va aussi gérer les accès à la section critique. Voici l'implémentation de la classe `Sémaphore.java`.
 ```java
 public abstract class Semaphore {
 
@@ -81,8 +81,8 @@ public abstract class Semaphore {
 }
 
 ``` 
-avec `this.valeur` qui correspond au nombre de threads qui peuvent accéder à la ressource critique, quand on fait appel à `syncWait()` qui va décrémenter `this.valeur` à chaque thread qui entre dans la ressource critique et si `this.valeur` est inférieur ou égal à 0 alors la sémaphore va faire attendre le thread. Quand un thread sort de la zone critique on fait appel à `syncSignal()` qui va incrémenter `this.valeur` et faire appel à `notifyAll()` qui réveille tout les threads si la ressource critique est disponible.<br>
-Plus précisément j'utilise une `SemaphoreBinaire.java`, c'est une implémentation différente de la classe abstraite `Semahpore.java` qui limite l'accès à la ressource critique à un seul thread
+avec `this.valeur` qui correspond au nombre de threads qui peuvent accéder à la section ou ressource critique, quand on fait appel à `syncWait()` qui va décrémenter `this.valeur` à chaque thread qui entre dans la section critique ou agit sur la ressource critique et si `this.valeur` est inférieur ou égal à 0 alors la sémaphore va faire attendre le thread. Quand un thread sort de la section critique on fait appel à `syncSignal()` qui va incrémenter `this.valeur` et faire appel à `notifyAll()` qui réveille tout les threads si la ressource ou section critique est disponible.<br>
+Plus précisément j'utilise une `SemaphoreBinaire.java`, c'est une implémentation différente de la classe abstraite `Semahpore.java` qui limite l'accès à la ressource ou la section critique à un seul thread
 ```java
 public final class SemaphoreBinaire extends Semaphore {
     public SemaphoreBinaire(int valeurInitiale) {

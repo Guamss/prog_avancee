@@ -12,9 +12,9 @@ Dans ce TP est abordé le design pattern de producteur-consommateur avec comme e
 
 ### <u>BAL</u>
 
-La boîte aux lettres se base sur le design pattern de producteur-consommateur où on a une classe `Producteur.java` qui va mettre à disposition (dans cet exemple) une lettre dans la boîte aux lettres qui est elle représentée par une classe `BoiteAuxLettres.java` et une class `Lecteur.java` va retirer et lire la lettre de celle-ci.
+La boîte aux lettres se base sur le design pattern de producteur-consommateur où on a une classe `Producteur.java` qui va mettre à disposition (dans cet exemple) une lettre dans la boîte aux lettres qui est elle représentée par une classe `BoiteAuxLettres.java` et une classe `Lecteur.java` va retirer et lire la lettre de celle-ci.
 ![BAL.png](BAL.png)
-Ici dans mon implémentation de la BAL j'ai une lettre représentée par un `String`, les deux `Producteur.java` et `Lecteur.java` on un buffer pour stocker respectivement la lettre à déposer et la lettre à lire. J'ai aussi fait appel à une Semaphore afin de pouvoir écrire des entrées par clavier avec `Scanner`, concrètement le Thread qui correspond au lecteur va dormir lorsque le producteur va écrire et le Thread qui correspond au producteur va dormir quand le lecteur lit
+Ici dans mon implémentation de la BAL j'ai une lettre représentée par un `String`, les deux `Producteur.java` et `Lecteur.java` on un buffer pour stocker respectivement la lettre à déposer et la lettre à lire stocké sur le moniteur `BoiteAuxLettres` qui a un champs pour la lettre stockée et l'autre pour savoir si celle-ci est en ce moment accessible. J'ai aussi fait appel à une Semaphore afin de pouvoir écrire des entrées par clavier avec `Scanner`, concrètement le Thread qui correspond au lecteur va dormir lorsque le producteur va écrire et le Thread qui correspond au producteur va dormir quand le lecteur lit
 ```java
     @Override
     public void run() {
@@ -77,8 +77,39 @@ Ici dans mon implémentation de la BAL j'ai une lettre représentée par un `Str
 ```
 
 ### <u>BAL - Queue</u>
-C'est sensiblement la même chose à part que la BAL sauf qu'on utilise une `BlockingQueue` d'un seul élément, à la place d'avoir un `String`, ce qui est plus approprié au contexte.
+C'est sensiblement la même chose à part que la BAL sauf 
+qu'on utilise une `BlockingQueue` qui est elle même déjà
+l'implémentation d'un moniteur. 
 ![BALQueue.png](BALQueue.png)
+On a la methode `write()` qui fait appel à la methode `put()` de `BlockingQueue` qui est elle même une implémentation d'un write dans le moniteur `BlockingQueue` et c'est la même chose pour la methode `take()` qui est appelé par la methode `read()`.
+```java
+public class BoiteAuxLettres {
+    private BlockingQueue<String> lettre;
+    private boolean avalaible;
+
+    public BoiteAuxLettres() {
+        lettre =  new ArrayBlockingQueue<>(1);
+        this.avalaible = true;
+    }
+
+    synchronized public void write(String bufferContent) throws InterruptedException {
+        if (avalaible) {
+            avalaible = false;
+            lettre.put(bufferContent);
+            avalaible = true;
+        }
+    }
+
+    synchronized public String read() throws InterruptedException {
+        if (lettre.size() == 0)
+        {
+            return "";
+        }
+        return lettre.take();
+    }
+}
+```
+Ici, à la place d'avoir un `String`, on a une `BlockingQueue`, ce qui est plus approprié au contexte.
 
 ### <u>Boulangerie</u>
 

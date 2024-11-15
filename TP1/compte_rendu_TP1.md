@@ -132,33 +132,32 @@ public abstract class Semaphore {
 
 On a donc notre application qui est scindée en trois colonnes (et ici 3 mobiles).
 ![Illustration du contexte de l'exercice](images/image-2.png)
-La colonne 2 (qui est la zone critique) n'accepte qu'un seul thread, si un thread pénètre cette colonne, les autres threads seront mis dans l'état `sleep` par la sémaphore grâce à l'instruction `wait` jusqu'à ce que le thread soit sorti de la zone critique, dès lors la sémaphore va faire un `signal` qui va faire rentrer un autre thread dans la zone critique et le cycle se répète.
+La colonne 2 (qui est la section critique) n'accepte qu'un seul thread, si un thread pénètre cette colonne, les autres threads seront mis dans l'état `sleep` par la sémaphore grâce à l'instruction `wait` jusqu'à ce que le thread soit sorti de la section critique, dès lors la sémaphore va faire un `signal` qui va faire rentrer un autre thread dans la section critique et le cycle se répète.
 
-![Illustration d'une zone critique](images/image.png)
+![Illustration d'une section critique](images/image.png)
 
-Ce qui se passe concrétement, c'est qu'à chaque entrée de boucle (à partir de la deuxième colonne) on va faire appel à la méthode `syncWait()` sémaphore (sémaphore donnée en paramètre du constructeur) qui va stopper tout les mobiles à l'entrée de la zone critique, puis quand le mobile sort de celle-ci on va faire appel à la méthode `syncSignal()` toujours de la même sémaphore.
+Ce qui se passe concrétement, c'est qu'à chaque entrée de boucle (à partir de la deuxième colonne) on va faire appel à la méthode `syncWait()` sémaphore (sémaphore donnée en paramètre du constructeur) qui va stopper tout les mobiles à l'entrée de la section critique, puis quand le mobile sort de celle-ci on va faire appel à la méthode `syncSignal()` toujours de la même sémaphore.
 ```java
     @Override
     public void run() {
         for (sonDebutDessin = 0; sonDebutDessin * 3 < saLargeur - sonPas; sonDebutDessin += sonPas) {
             /* MÊME CODE QU'AVANT */
         }
-        semaphore.syncWait(); // Le mobile entre dans la zone critique en avancant
+        semaphore.syncWait(); // Le mobile entre dans la section critique en avancant
         for (sonDebutDessin = saLargeur / 3; (3 * sonDebutDessin / 2) < saLargeur - sonPas; sonDebutDessin += sonPas) {
             /* MÊME CODE QU'AVANT */
         }
-        semaphore.syncSignal(); // Le mobile sort de la zone critique en avancant
+        semaphore.syncSignal(); // Le mobile sort de la section critique en avancant
         for (sonDebutDessin = 2 * saLargeur / 3; sonDebutDessin < saLargeur - sonPas; sonDebutDessin += sonPas) {
             /* MÊME CODE QU'AVANT */
         }
         for (sonDebutDessin = saLargeur; sonDebutDessin > (saLargeur / 3) * 2; sonDebutDessin -= sonPas) {
             /* MÊME CODE QU'AVANT */
         }
-        semaphore.syncWait(); // Le mobile entre dans la zone critique en reculant
-        for (sonDebutDessin = (saLargeur / 3) * 2; sonDebutDessin > saLargeur / 3; sonDebutDessin -= sonPas) {
+        semaphore.syncWait(); // Le mobile entre dans la section critique en reculant
             /* MÊME CODE QU'AVANT */
         }
-        semaphore.syncSignal(); // Le mobile sort de zone critique en reculant
+        semaphore.syncSignal(); // Le mobile sort de section critique en reculant
         for (sonDebutDessin = saLargeur / 3; sonDebutDessin > sonPas; sonDebutDessin -= sonPas) {
             /* MÊME CODE QU'AVANT */
         }
