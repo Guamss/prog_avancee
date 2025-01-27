@@ -1,6 +1,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
+NBR_COEURS = 8
+
 def expected(x):
     return x
 
@@ -16,13 +18,13 @@ y_expected = [expected(j) for j in x_expected]
 plt.plot(x, y, label = f"Réalité (Expérience sur {format(df["Ntotal"][0], ".1E")} points)")
 plt.plot(x_expected, y_expected, '--', label = "Attendu")
 
-plt.xlim(1, 12)
+plt.xlim(1, NBR_COEURS)
 
-plt.xticks(range(1, 13, 1))
-plt.yticks(range(1, 13, 1))
+plt.xticks(range(1, NBR_COEURS + 1, 1))
+plt.yticks(range(1, NBR_COEURS + 1, 1))
 
 plt.xlabel('Nombre de processus')
 plt.ylabel('Speedup')
 plt.legend()
-plt.savefig('Speedup_MonteCarlo.png')
+plt.savefig('Speedup_MonteCarlo_machine_G26.png')
 plt.show()

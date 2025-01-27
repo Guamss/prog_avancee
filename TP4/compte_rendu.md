@@ -18,3 +18,9 @@ un future prend en param un callable (donne le résultat des callable pas dans l
 
 
 atomicInteger est un moniteur et la section critique c'est l'incrémentation. ici l'objet il protège un entier
+
+en G-26 sur les pc du fond à droite on a ça comme config : 
+* 32 GB de RAM
+* I7-9700 cadencé à 3.00 GHz :
+  * 8 coeurs logique (0 hyperthreadé)
+* SSD
