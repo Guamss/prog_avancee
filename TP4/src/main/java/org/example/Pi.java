@@ -12,7 +12,7 @@ public class Pi {
     public static void main(String[] args) throws Exception {
         long total = 0;
         // 10 workers, 50000 iterations each
-        total = new Master().doRun(6250000, 16);
+        total = new Master().doRun(100000000, 16);
         System.out.println("total from Master = " + total);
     }
 }
@@ -65,7 +65,7 @@ class Master {
         System.out.println("Available processors: " + numWorkers);
         System.out.println("Time Duration (ms): " + meanElapsedTime + "\n");
 
-        new CsvOutput("./src/main/resources/output_pi_forte.csv").write(error, nTot, numWorkers, meanElapsedTime);
+        new CsvOutput("./src/main/resources/output_pi_faible_monpc.csv").write(error, nTot, numWorkers, meanElapsedTime);
 
         return total;
     }
