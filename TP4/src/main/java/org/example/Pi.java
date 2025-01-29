@@ -12,7 +12,9 @@ public class Pi {
     public static void main(String[] args) throws Exception {
         long total = 0;
         // 10 workers, 50000 iterations each
-        total = new Master().doRun(100000000, 16);
+        for (int j = 1; j <= 16; j++) {
+            total = new Master().doRun(10000000, j);
+        }
         System.out.println("total from Master = " + total);
     }
 }
@@ -56,16 +58,16 @@ class Master {
         int nTot = totalCount * numWorkers;
         Collections.sort(elaspsedTimeArray);
         System.out.println(Arrays.toString(elaspsedTimeArray.toArray()));
-        long meanElapsedTime = elaspsedTimeArray.get(elaspsedTimeArray.size() / 2);
+        long medianElapsedTime = elaspsedTimeArray.get(elaspsedTimeArray.size() / 2);
 
         System.out.println("\nPi : " + pi);
         System.out.println("Error: " + error + "\n");
 
         System.out.println("Ntot: " + nTot);
         System.out.println("Available processors: " + numWorkers);
-        System.out.println("Time Duration (ms): " + meanElapsedTime + "\n");
+        System.out.println("Time Duration (ms): " + medianElapsedTime + "\n");
 
-        new CsvOutput("./src/main/resources/output_pi_faible_monpc.csv").write(error, nTot, numWorkers, meanElapsedTime);
+        new CsvOutput("./src/main/resources/output_pi_faible_monpc.csv").write(error, nTot, numWorkers, medianElapsedTime);
 
         return total;
     }
