@@ -1,9 +1,7 @@
 package org.example;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.*;
 
 /**
@@ -14,7 +12,7 @@ public class Pi {
     public static void main(String[] args) throws Exception {
         long total = 0;
         // 10 workers, 50000 iterations each
-        total = new Master().doRun(10000000, 2);
+        total = new Master().doRun(100000000, 16);
         System.out.println("total from Master = " + total);
     }
 }
@@ -24,45 +22,51 @@ public class Pi {
  * and aggregates the results.
  */
 class Master {
+    public ArrayList<Long> elaspsedTimeArray = new ArrayList<>();
+    public long total = 0;
     public long doRun(int totalCount, int numWorkers) throws InterruptedException, ExecutionException, IOException {
+        for (int x = 0; x < 10; x++) {
+            long startTime = System.currentTimeMillis();
 
-        long startTime = System.currentTimeMillis();
+            // Create a collection of tasks
+            List<Callable<Long>> tasks = new ArrayList<Callable<Long>>();
+            for (int i = 0; i < numWorkers; ++i) {
+                tasks.add(new Worker(totalCount));
+            }
 
-        // Create a collection of tasks
-        List<Callable<Long>> tasks = new ArrayList<Callable<Long>>();
-        for (int i = 0; i < numWorkers; ++i) {
-            tasks.add(new Worker(totalCount));
+            // Run them and receive a collection of Futures
+            ExecutorService exec = Executors.newFixedThreadPool(numWorkers);
+            List<Future<Long>> results = exec.invokeAll(tasks);
+            total = 0;
+
+            // Assemble the results.
+            for (Future<Long> f : results) {
+                // Call to get() is an implicit barrier.  This will block
+                // until result from corresponding worker is ready.
+                total += f.get();
+            }
+            long stopTime = System.currentTimeMillis();
+            long elapsedTime = stopTime - startTime;
+            elaspsedTimeArray.add(elapsedTime);
+            exec.shutdown();
         }
 
-        // Run them and receive a collection of Futures
-        ExecutorService exec = Executors.newFixedThreadPool(numWorkers);
-        List<Future<Long>> results = exec.invokeAll(tasks);
-        long total = 0;
-
-        // Assemble the results.
-        for (Future<Long> f : results) {
-            // Call to get() is an implicit barrier.  This will block
-            // until result from corresponding worker is ready.
-            total += f.get();
-        }
         double pi = 4.0 * total / totalCount / numWorkers;
-
-        long stopTime = System.currentTimeMillis();
         double error = (Math.abs((pi - Math.PI)) / Math.PI);
         int nTot = totalCount * numWorkers;
+        Collections.sort(elaspsedTimeArray);
+        System.out.println(Arrays.toString(elaspsedTimeArray.toArray()));
+        long meanElapsedTime = elaspsedTimeArray.get(elaspsedTimeArray.size() / 2);
 
         System.out.println("\nPi : " + pi);
         System.out.println("Error: " + error + "\n");
 
         System.out.println("Ntot: " + nTot);
         System.out.println("Available processors: " + numWorkers);
-        System.out.println("Time Duration (ms): " + (stopTime - startTime) + "\n");
+        System.out.println("Time Duration (ms): " + meanElapsedTime + "\n");
 
-        new CsvOutput("./src/main/resources/output_assignment102.csv").write(error, nTot, numWorkers, (stopTime - startTime));
+        new CsvOutput("./src/main/resources/output_pi_faible_monpc.csv").write(error, nTot, numWorkers, meanElapsedTime);
 
-//        System.out.println((Math.abs((pi - Math.PI)) / Math.PI) + " " + totalCount * numWorkers + " " + numWorkers + " " + (stopTime - startTime));
-
-        exec.shutdown();
         return total;
     }
 }
