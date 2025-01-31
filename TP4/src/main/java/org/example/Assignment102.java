@@ -2,6 +2,7 @@
 package org.example;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -42,24 +43,27 @@ class PiMonteCarlo {
 }
 
 public class Assignment102 {
+
+    public ArrayList<Long> elapsedTimeArray = new ArrayList<>();
+
     public static void main(String[] args) throws IOException {
-        int nThrow = Integer.parseInt(args[0]);
-        int nProc = Integer.parseInt(args[1]);
-        PiMonteCarlo PiVal = new PiMonteCarlo(nThrow);
-        long startTime = System.currentTimeMillis();
-        double value = PiVal.getPi(nProc);
-        long stopTime = System.currentTimeMillis();
+        int nThrow = 10000000;
+        int nProc = 16;
+        for (int i = 1; i <= nProc; i++) {
+            PiMonteCarlo PiVal = new PiMonteCarlo(nThrow);
+            long startTime = System.currentTimeMillis();
+            double value = PiVal.getPi(i);
+            long stopTime = System.currentTimeMillis();
+            double error = Math.abs((value - Math.PI) / Math.PI);
+            long timeDuration = stopTime - startTime;
+            System.out.println("Approx value: " + value);
+            System.out.println("Difference to exact value of pi: " + (value - Math.PI));
+            System.out.println("Error: " + error * 100 + " %");
+            System.out.println("Available processors: " + i);
+            System.out.println("Time Duration: " + timeDuration + "ms");
 
-        Double error = Math.abs((value - Math.PI) / Math.PI);
-        long timeDuration = stopTime - startTime;
-
-        System.out.println("Approx value: " + value);
-        System.out.println("Difference to exact value of pi: " + (value - Math.PI));
-        System.out.println("Error: " + error * 100 + " %");
-        System.out.println("Available processors: " + nProc);
-        System.out.println("Time Duration: " + timeDuration + "ms");
-
-        CsvOutput outputFile = new CsvOutput("./src/main/resources/output_assignment102.csv");
-        outputFile.write(error, nThrow,nProc, timeDuration);
+            CsvOutput outputFile = new CsvOutput("./src/main/resources/output_assignment102_forte_monpc.csv");
+            outputFile.write(error, nThrow, i, timeDuration);
+        }
     }
 }
