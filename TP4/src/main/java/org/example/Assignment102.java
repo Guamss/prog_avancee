@@ -50,7 +50,7 @@ public class Assignment102 {
         int nThrow = 10000000;
         int nProc = 16;
         for (int i = 1; i <= nProc; i++) {
-            PiMonteCarlo PiVal = new PiMonteCarlo(nThrow);
+            PiMonteCarlo PiVal = new PiMonteCarlo(nThrow*i);
             long startTime = System.currentTimeMillis();
             double value = PiVal.getPi(i);
             long stopTime = System.currentTimeMillis();
@@ -62,8 +62,8 @@ public class Assignment102 {
             System.out.println("Available processors: " + i);
             System.out.println("Time Duration: " + timeDuration + "ms");
 
-            CsvOutput outputFile = new CsvOutput("./src/main/resources/output_assignment102_forte_monpc.csv");
-            outputFile.write(error, nThrow, i, timeDuration);
+            CsvOutput outputFile = new CsvOutput("./src/main/resources/output_assignment102_faible_machine_G26.csv");
+            outputFile.write(error, nThrow*i, i, timeDuration);
         }
     }
 }

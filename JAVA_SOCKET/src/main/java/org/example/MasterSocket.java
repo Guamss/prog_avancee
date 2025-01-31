@@ -2,6 +2,9 @@ package org.example;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * Master is a client. It makes requests to numWorkers.
@@ -19,8 +22,9 @@ public class MasterSocket {
     public static void main(String[] args) throws Exception {
 
         // MC parameters
-        int totalCount = 16000000; // total number of throws on a Worker
-        int total; // total number of throws inside quarter of disk
+        ArrayList<Long> elapsedTimeArray = new ArrayList<>();
+        int totalCount = 100000000; // total number of throws on a Worker
+        int total = 0; // total number of throws inside quarter of disk
         double pi;
 
         int numWorkers = maxServer;
@@ -60,52 +64,54 @@ public class MasterSocket {
             writer[i] = new PrintWriter(new BufferedWriter(new OutputStreamWriter(sockets[i].getOutputStream())), true);
         }
 
+        totalCount = totalCount / numWorkers;
         String message_to_send;
         message_to_send = String.valueOf(totalCount);
 
-        String message_repeat = "y";
-
         long stopTime, startTime;
 
-        while (message_repeat.equals("y")) {
-            total = 0;
+        total = 0;
+        for (int repeat = 0; repeat < 10; repeat++) {
             startTime = System.currentTimeMillis();
             // initialize workers
             for (int i = 0; i < numWorkers; i++) {
                 writer[i].println(message_to_send);          // send a message to each worker
             }
 
-            //listen to workers's message
+            // listen to workers' messages
             for (int i = 0; i < numWorkers; i++) {
                 tab_total_workers[i] = reader[i].readLine();      // read message from server
                 System.out.println("Client sent: " + tab_total_workers[i]);
             }
+            stopTime = System.currentTimeMillis();
+            long timeDuration = (stopTime - startTime);
+            elapsedTimeArray.add(timeDuration);
+        }
 
-            // compute PI with the result of each workers
+            // compute PI with the result of each worker
             for (int i = 0; i < numWorkers; i++) {
                 total += Integer.parseInt(tab_total_workers[i]);
             }
             pi = 4.0 * total / totalCount / numWorkers;
 
-            stopTime = System.currentTimeMillis();
+            double error = (Math.abs((pi - Math.PI)) / Math.PI);
+            Collections.sort(elapsedTimeArray);
+            System.out.println(Arrays.toString(elapsedTimeArray.toArray()));
+            long elapsedTimeMedian = elapsedTimeArray.get(elapsedTimeArray.size() / 2);
 
             System.out.println("\nPi : " + pi);
-            System.out.println("Error: " + (Math.abs((pi - Math.PI)) / Math.PI) + "\n");
+            System.out.println("Error: " + error + "\n");
 
             System.out.println("Ntot: " + totalCount * numWorkers);
             System.out.println("Available processors: " + numWorkers);
-            System.out.println("Time Duration (ms): " + (stopTime - startTime) + "\n");
+            System.out.println("Time Duration (ms): " + elapsedTimeMedian + "\n");
 
-            System.out.println((Math.abs((pi - Math.PI)) / Math.PI) + " " + totalCount * numWorkers + " " + numWorkers + " " + (stopTime - startTime));
+            System.out.println((Math.abs((pi - Math.PI)) / Math.PI) + " " + totalCount * numWorkers + " " + numWorkers + " " + elapsedTimeMedian);
 
             System.out.println("\n Repeat computation (y/N): ");
-            try {
-                message_repeat = bufferRead.readLine();
-                System.out.println(message_repeat);
-            } catch (IOException ioE) {
-                ioE.printStackTrace();
-            }
-        }
+
+            CsvOutput outputFile = new CsvOutput("./src/main/resources/output_forte_piSocket_machine_G26.csv");
+            outputFile.write(error, totalCount * numWorkers, numWorkers, elapsedTimeMedian);
 
         for (int i = 0; i < numWorkers; i++) {
             System.out.println("END");     // Send ending message

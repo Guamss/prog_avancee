@@ -3,6 +3,7 @@ package org.example;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Random;
 
 /**
  * Worker is a server. It computes PI by Monte Carlo method and sends
@@ -34,15 +35,15 @@ public class WorkerSocket {
             str = bRead.readLine();          // read message from Master
             if (!(str.equals("END"))) {
                 System.out.println("Server receives totalCount = " + str);
-                int n_tot = Integer.parseInt(str);
-                int n_cibles = 0;
-                for (int i = 0; i < n_tot; i++) {
-                    double x = Math.random();
-                    double y = Math.random();
-                    if (Math.pow(x, 2) + Math.pow(y, 2) <= 1)
-                        n_cibles++;
+                int numIterations = Integer.parseInt(str);
+                long circleCount = 0;
+                Random prng = new Random();
+                for (int j = 0; j < numIterations; j++) {
+                    double x = prng.nextDouble();
+                    double y = prng.nextDouble();
+                    if ((x * x + y * y) < 1) ++circleCount;
                 }
-                pWrite.println(n_cibles);         // send number of points in quarter of disk
+                pWrite.println(circleCount);         // send number of points in quarter of disk
             } else {
                 isRunning = false;
             }

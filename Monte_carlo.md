@@ -29,3 +29,5 @@ on peut donc approximer que :
 $p \approx \frac{nCible}{nTotal} = \frac{\pi}4 \approx \frac{nCible}{nTotal}$
 
 $p = \pi \approx 4 \frac{nCible}{nTotal}$
+
+pour programmer java socket on a réutilisé des codes de pi.java parce déjà testé et approuvé par les speedup. c pour la qualité de code, réutilisabilité etc...
