@@ -7,7 +7,7 @@ aléatoires. Concrètement, Afin d'approximer $\pi$ on va effectuer des lancers 
 (disque de rayon $r = 1$) et pour chacun des lancers on va évaluer sa distance depuis le centre. Pour ça
 on utilise la formule suivante :
 
-$d = \sqrt{x^2 + y^2} = x + y$
+$d = \sqrt{x^2 + y^2} = x^2 + y^2$
 
 étant donné qu'on a un rayon $r = 1$ il est inutile de faire les puissances et les racines carrées.
 Sur $n$ on va approximer $\pi$ en faisant $\frac{nCible}{nTotal}$ avec $nCible$ le nombre de points
@@ -30,4 +30,48 @@ $p \approx \frac{nCible}{nTotal} = \frac{\pi}4 \approx \frac{nCible}{nTotal}$
 
 $p = \pi \approx 4 \frac{nCible}{nTotal}$
 
-pour programmer java socket on a réutilisé des codes de pi.java parce déjà testé et approuvé par les speedup. c pour la qualité de code, réutilisabilité etc...
+## Implémentation de la méthode de Monte Carlo
+
+Afin d'illustrer une implémentation possible de cette méthode, j'ai
+réalisé un pseudo-code en python :
+```java
+int n_total = 100000;
+int n_cible = 0;
+for (int i = 0; i <= n_total; i++) {
+    double x = Math.random();
+    double y = Math.random();
+    double d = Math.pow(x, 2) + Math.pow(y, 2);
+    if (d <= 1) {
+        n_cible ++;
+    }
+}
+double pi = 4 * (n_cible / n_total);
+```
+ici dans ce code, la ressource critique est `n_cible` étant donné qu'elle est
+partagée par chaque itération du programme, c'est donc un programme parallèlisable mais
+mais il faudrait gérer l'accès à cette ressource (comme par exemple en utilisant un moniteur ou une sémaphore) 
+dans le cas ou nous faisons des itérations parallèles.
+
+Une autre implémentation de ce programme est possible avec le paradigme Master/Worker.
+
+### Le Master / Worker
+
+Le paradigme Master / Worker c'est : 
+* Des workers qui ont chacun une tâche attitrée, dans notre cas c'est $n$ lancés aléatoires
+* Un master qui attitre des tâches aux workers et qui traite le résultat de leur travail. Dans notre cas, le master
+va s'occuper du calcul `4* (n_cible /n_total)`
+
+Voici un schéma explicatif :
+![img.png](masterWorker.png)
+
+On aura donc $n$ processus worker indépendant, ils vont simultanément calculer $\frac{nTotal}n$ 
+tirage aléatoire chacun. Et une fois que chacun des workers a fini sa tâche individuelle, le master va estimer $pi$.
+Afin d'évaluer l'efficacité de la parallélisation d'un programme, il existe une méthode, c'est le speedup.
+## Le speedup, c'est quoi ?
+
+Un speedup c'est ça :
+
+$S_p=\frac{T_1}{T_p}$
+
+Ici on a Un Speedup $S_p$ pour $p$ processus. Dans la formule $T_1$ le temps d'exécution du programme pour $1$ 
+processus, et $T_p$ le temps d'exécution pour $p$ processus.

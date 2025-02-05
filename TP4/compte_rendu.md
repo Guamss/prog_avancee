@@ -58,4 +58,4 @@ en G-26 sur les pc du fond à droite on a ça comme config :
 * 32 GB de RAM
 * I7-9700 cadencé à 3.00 GHz :
   * 8 coeurs logique (0 hyperthreadé)
-* SSD
+* SSD 
