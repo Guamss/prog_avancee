@@ -73,5 +73,60 @@ Un speedup c'est ça :
 
 $S_p=\frac{T_1}{T_p}$
 
-Ici on a Un Speedup $S_p$ pour $p$ processus. Dans la formule $T_1$ le temps d'exécution du programme pour $1$ 
-processus, et $T_p$ le temps d'exécution pour $p$ processus.
+Un Speedup $S_p$ pour $p$ processus. Dans la formule $T_1$ est le temps d'exécution du programme pour $1$ 
+processus, et $T_p$ est le temps d'exécution pour $p$ processus.
+
+### Ça sert à quoi ?
+
+Comme dit un peu plus haut ça sert à évaluer l'efficacité de la parallélisation d'un programme. Un speedup de $2$
+ça veut dire que le programme va deux fois plus vite que si on l'exécutait avec un seul processus.
+mais concrètement 
+il y a deux manières de mesurer un speedup.
+
+#### <u>Scalabilité forte</u>
+
+La scalabilité forte consiste à augmenter le nombre de processus à chaque expérience
+tout en gardant la même charge, dans ce cas on espère dans le meilleur des cas une évolution du speedup linéaire
+![img.png](img.png)
+
+#### <u>Scalabilité faible</u> 
+
+La scalabilité faible c'est le fait d'augmenter la charge proportionnellement au nombre de processus. Dans le meilleur
+des cas on espère un speedup constant
+![img_1.png](img_1.png)
+
+## L'importance de la configuration et l'environnement pour l'évaluation d'un speedup
+
+Il est très important avant d'effectuer des tests sur le programme ciblé car le processeur a un impact majeur sur la
+performance du programme, sur un processeur à 8 coeur on peut remarquer une baisse de performance en utilisant
+9 processus sur un programme. La fréquence du processeur a aussi un impact sur le temps d'exécution (car cela 
+influe sur le nombre de cycle). Enfin l'environnement d'exécution a aussi un impact sur les performances du programme
+et peut influencer sur le résultat.
+
+Voici ma configuration personnelle sur laquelle j'ai effectué tous les tests :
+
+| Composant  | Détails                               |
+|------------|---------------------------------------|
+| RAM        | 16 GB                                 |
+| Processeur | Intel Core i5-13420H (4.60GHz)        
+| Coeurs     | 8 coeurs physique et 6 coeurs logique |
+| Cache L1   | 704 KB                                |
+| Cache L2   | 8 MB                                  |
+| Cache L3   | 12 MB                                 |
+
+Voici une machine de l'IUT (en G26) sur laquelle j'ai aussi effectué tous les tests :
+
+| Composant  | Détails                       |
+|------------|-------------------------------|
+| RAM        | 32 GB                         |
+| Processeur | Intel Core i7-9700 (3.00 GHz) |
+| Coeurs     | 8 coeurs physique             |
+| Cache L1   | 512 KB                        |
+| Cache L2   | 2 MB                          |
+| Cache L3   | 12 MB                         |
+
+
+
+## Evaluation des speedup de différentes implémentation de la méthode de Monte Carlo
+
+
