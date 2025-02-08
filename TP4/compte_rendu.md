@@ -12,7 +12,7 @@ $$
 étant donné qu'on a un rayon $r = 1$ il est inutile de faire les puissances et les racines carrées. 
 Sur $n$ on va approximer $\pi$ en faisant $\frac{nCible}{nTotal}$ avec $nCible$ le nombre de points 
 avec une distance $d \le 1$.
-![monte_carlo.png](monte_carlo.png)
+![monte_carlo.png](../images/monte_carlo.png)
 
 ## Estimation de la probabilité qu'un lancé $X_p$ soit dans le quart de disque
 
