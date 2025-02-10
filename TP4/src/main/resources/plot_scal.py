@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 NBR_COEURS = 16
 
 def expected(x):
-    return x  # La fonction attendue est linéaire
+    return x
 
 file_path = 'output_pi_forte.csv'
 df = pd.read_csv(file_path, sep=";")
@@ -20,22 +20,17 @@ plt.figure(figsize=(10, 6))
 plt.scatter(x, y, color='red', label=f"Réalité (Expérience sur {format(df['Ntotal'][0], '.1E')} points)")
 plt.plot(x_expected, y_expected, '--', label="Attendu")
 
-# Définition des axes
 plt.xlim(1, NBR_COEURS)
-plt.ylim(0, 11)  # Limiter l'axe y entre 0 et 1
+plt.ylim(0, 11)  
 
-# Modifie les ticks de l'axe y pour qu'ils soient espacés de 0.1
 plt.xticks(range(1, NBR_COEURS + 2, 1))  
-plt.yticks([i * 1 for i in range(11)])  # Ticks de l'axe y entre 0 et 1 avec un pas de 0.1
+plt.yticks([i * 1 for i in range(11)])  
 
-# Ajout d'une grille avec des pas de 0.1
 plt.grid(True, which='major', linestyle='--', linewidth=0.5)
 
-# Axes x et y
 plt.axhline(0, color='black', linewidth=0.5, ls='--')  
 plt.axvline(0, color='black', linewidth=0.5, ls='--')  
 
-# Labels et titre
 plt.xlabel('Nombre de processus')
 plt.ylabel('Speedup')
 plt.legend()

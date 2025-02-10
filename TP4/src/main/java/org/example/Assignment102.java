@@ -44,13 +44,11 @@ class PiMonteCarlo {
 
 public class Assignment102 {
 
-    public ArrayList<Long> elapsedTimeArray = new ArrayList<>();
-
     public static void main(String[] args) throws IOException {
-        int nThrow = 10000000;
+        int nThrow = 100000000;
         int nProc = 16;
         for (int i = 1; i <= nProc; i++) {
-            PiMonteCarlo PiVal = new PiMonteCarlo(nThrow*i);
+            PiMonteCarlo PiVal = new PiMonteCarlo(nThrow);
             long startTime = System.currentTimeMillis();
             double value = PiVal.getPi(i);
             long stopTime = System.currentTimeMillis();
@@ -62,8 +60,8 @@ public class Assignment102 {
             System.out.println("Available processors: " + i);
             System.out.println("Time Duration: " + timeDuration + "ms");
 
-            CsvOutput outputFile = new CsvOutput("./src/main/resources/output_assignment102_faible_machine_G26.csv");
-            outputFile.write(error, nThrow*i, i, timeDuration);
+            CsvOutput outputFile = new CsvOutput("./src/main/resources/output_assigment102_error.csv");
+            outputFile.write(error, nThrow, i, timeDuration);
         }
     }
 }

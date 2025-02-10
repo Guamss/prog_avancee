@@ -26,7 +26,7 @@ $p = \frac{\pi}4$
 
 on peut donc approximer que :
 
-$p \approx \frac{nCible}{nTotal} = \frac{\pi}4 \approx \frac{nCible}{nTotal}$
+$p \approx \frac{nCible}{nTotal} = \frac{\ pi}4 \approx \frac{nCible}{nTotal}$
 
 $p = \pi \approx 4 \frac{nCible}{nTotal}$
 
@@ -36,19 +36,17 @@ Afin d'illustrer une implémentation possible de cette méthode, j'ai
 réalisé un pseudo-code en python :
 
 ```java
-int n_total = 100000;
-int n_cible = 0;
-for(
-int i = 0;
-i <=n_total;i++){
-double x = Math.random();
-double y = Math.random();
-double d = Math.pow(x, 2) + Math.pow(y, 2);
-    if(d <=1){
-n_cible ++;
+    int n_total = 100000;
+    int n_cible = 0;
+    for(int i = 0; i <=n_total; i++) {
+        double x = Math.random();
+        double y = Math.random();
+        double d = Math.pow(x, 2) + Math.pow(y, 2);
+        if(d <=1) {
+            n_cible ++;
         }
-        }
-double pi = 4 * (n_cible / n_total);
+    }
+    double pi = 4 * (n_cible / n_total);
 ```
 
 ici dans ce code, la ressource critique est `n_cible` étant donné qu'elle est
@@ -114,7 +112,7 @@ Voici ma configuration personnelle sur laquelle j'ai effectué tous les tests :
 | Composant  | Détails                               |
 |------------|---------------------------------------|
 | RAM        | 16 GB                                 |
-| Processeur | Intel Core i5-13420H (4.60GHz)        
+| Processeur | Intel Core i5-13420H (4.60GHz)        |
 | Coeurs     | 8 coeurs physique et 6 coeurs logique |
 | Cache L1   | 704 KB                                |
 | Cache L2   | 8 MB                                  |
@@ -131,13 +129,43 @@ Voici une machine de l'IUT (en G26) sur laquelle j'ai aussi effectué tous les t
 | Cache L2   | 2 MB                          |
 | Cache L3   | 12 MB                         |
 
+## Analyse des mesures d'efficacité grâce à la norme ISO/IEC 25022
+
+la methode de Monte Carlo dans son essence même est une méthode probabiliste.
+C'est à dire que grâce à des lois de probabilité, on approxime $\pi$. Cela implique que
+le controle de l'erreur est très compliqué (car aléatoire). Cela étant dit, 
+il est possible de réaliser les mesures d'efficacité d'un programme 
+à la page 14 du document, cette formule nous est énoncée :
+
+$X = \frac{T_t}{T_a}$
+
+Dans le cas d'un speedup, on peut considérer que $T_t = T_1$ et $T_a = T_p$,
+on peut donc considérer que 
+
+$X = \frac{T_t}{T_a} \approx S_p$
+
+Partons du principe qu'on a un temps d'exécution voulu $\hat{T_p}$ pour $T_p$, l'erreur se calcul (en %) avec :
+
+$X = \frac{\hat{T_p}}{T_p}$
+
 ## Evaluation des speedup de différentes implémentation de la méthode de Monte Carlo
 
 ### Pi.java
 
+analyse de la conception
+
 ![pi_conception.jpg](images/pi_conception.jpg)
 
+le calcul de la scalabilité est un critère de **Qualité in use**, plus précisément c'est un critère de **Effeciency**.
+Car il sert à mesurer le speedup en fonction du temps d'exécution, en d'autres termes on mesure à quel point le
+programme
+va plus vite en fonction du nombre de processus.
+(pour un $S_p = 2$ on va deux fois **plus vite** que l'exécution à un seul processus
+tandis que $S_p$ = 0.5 on va deux fois **moins vite** que l'exécution à un seul processus)
+
 #### <u>Evaluation de la scalabilité forte de Pi.java sur ma machine :</u>
+
+Données d'études de scalabilité forte avec pi.java
 
 | Erreur                | Ntotal    | Nprocessus | Temps (ms) |
 |-----------------------|-----------|------------|------------|
@@ -148,6 +176,16 @@ Voici une machine de l'IUT (en G26) sur laquelle j'ai aussi effectué tous les t
 | 8.770506560683454E-5  | 100000000 | 16         | 433        |
 
 ![Speedup_Scalabilite_forte_pi_monpc.png](images/Speedup_Scalabilite_forte_pi_monpc.png)
+
+Analyse du graphique :
+
+1. Référence théorique (courbe attendue) :
+    * La courbe en pointillés représente le speedup idéal linéaire (speedup = nombre de processus).
+    * Si l’implémentation était parfaitement scalable, les points expérimentaux seraient alignés sur cette droite.
+
+2. Résultats expérimentaux :
+    * Pour 2, 4 et 8 processus, le speedup suit une tendance quasi-linéaire mais reste légèrement en dessous.
+    * À 16 processus, le speedup est clairement sous la ligne idéale, indiquant une dégradation des performances.
 
 #### <u>Evaluation de la scalabilité forte de Pi.java sur la machine de l'IUT :</u>
 
@@ -160,6 +198,23 @@ Voici une machine de l'IUT (en G26) sur laquelle j'ai aussi effectué tous les t
 | 8.967932160437934E-6  | 100000000 | 16         | 500        |
 
 ![Speedup_Scalabilite_forte_pi_machine_G26.png](images/Speedup_Scalabilite_forte_pi_machine_G26.png)
+
+Analyse du graphique :
+
+1. Référence théorique (courbe attendue) :
+
+* Lbala=
+* blalg.
+
+2. Résultats expérimentaux :
+
+* fprege.
+* rkoeggpergk.
+
+| Machine     | Valeur de $S_p$ à $p = 16$ |
+|-------------|----------------------------|
+| Ma machine  | 7.77                       |
+| PC de l'IUT | 6.31                       |
 
 #### <u>Evaluation de la scalabilité faible de Pi.java sur ma machine :</u>
 
@@ -300,5 +355,26 @@ Voici une machine de l'IUT (en G26) sur laquelle j'ai aussi effectué tous les t
 | 3.4848117456656396E-5 | 160000000 | 16         | 64518      |
 
 ![Speedup_Scalabilite_faible_assigment102_machine_G26.png](images/Speedup_Scalabilite_faible_assigment102_machine_G26.png)
+
+pourquoi pas faire une section remarquue pour assigment102,
+comparer les graphiques actuels avec 
+
+```java
+int n_total = 100000;
+int n_cible = n_total;
+for(
+int i = 0;
+i <=n_total;i++){
+double x = Math.random();
+double y = Math.random();
+double d = Math.pow(x, 2) + Math.pow(y, 2);
+    if(d <=1){
+n_cible --;
+        }
+        }
+double pi = 4 * (n_cible / n_total);
+```
+
+normalement ça devrait avoir une meilleure parallèlisation 
 
 ### JAVA SOCKET vs Pi.java, c quoi la diff sur les perfs des processus lourds et léger 
