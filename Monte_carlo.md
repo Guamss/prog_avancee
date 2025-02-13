@@ -129,7 +129,89 @@ Voici une machine de l'IUT (en G26) sur laquelle j'ai aussi effectué tous les t
 | Cache L2   | 2 MB                          |
 | Cache L3   | 12 MB                         |
 
-## Analyse des mesures d'efficacité grâce à la norme ISO/IEC 25022
+## La norme ISO/IEC 9126 et les critères de qualité
+
+Dans le cadre du développement logiciel, plusieurs modèles de qualité ont été définis pour évaluer les systèmes en fonction de différents critères. Ces critères aident à comprendre à quel point un logiciel est efficace, fiable et bien conçu. Voici une présentation des deux principaux modèles de qualité : le modèle **Quality In Use** et le modèle **Product Quality**.
+
+---
+
+### Quality In Use Model
+
+Le **Quality In Use Model** évalue la qualité d'un logiciel du point de vue de son utilisateur final. Ce modèle se concentre sur l'expérience d'utilisation réelle, en tenant compte de plusieurs critères importants. Voici un tableau récapitulatif des critères de qualité dans ce modèle :
+
+| **Critère**                          | **Définition**                                                                                                                |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| **Efficiency**                        | La capacité du système à permettre à l'utilisateur d'accomplir ses tâches avec un minimum de ressources (temps, effort, etc.).    |
+| **Effectiveness**                     | La capacité du système à permettre à l'utilisateur d'atteindre ses objectifs de manière correcte et complète.                   |
+| **Usefulness**                        | Mesure dans laquelle le logiciel remplit ses fonctions de manière utile (ex. StarUML est plus utile pour créer des diagrammes que Excalidraw). |
+| **Trust**                             | La confiance de l'utilisateur dans la stabilité et la fiabilité du logiciel (ex. absence de crashs inattendus).                  |
+| **Pleasure**                          | L'agrément de l'utilisateur lorsqu'il utilise le logiciel, notamment pour les débutants.                                       |
+| **Comfort**                           | Le confort de l'utilisateur, notamment en termes de modularité et d'ergonomie de l'application.                                |
+| **Economic risk**                     | Le coût lié à la maintenance du logiciel, incluant les mises à jour et les éventuels problèmes financiers associés.              |
+| **Health and safety risk mitigation** | La réduction des risques pour la santé et la sécurité des utilisateurs (ex. IA qui donne de mauvais conseils).                  |
+| **Environmental risk mitigation**     | La réduction des risques pour l'environnement, comme un bras robotique qui pourrait endommager des personnes.                  |
+| **Context completeness**              | La capacité du logiciel à remplir son rôle de manière adéquate dans le contexte spécifique de l'application.                   |
+| **Flexibility**                       | La capacité du logiciel à s'adapter à différents contextes ou besoins sans nécessiter une refonte importante.                    |
+
+---
+
+### Product Quality Model
+
+Le **Product Quality Model** se concentre sur les critères qui déterminent la qualité intrinsèque d'un produit logiciel, en particulier sa capacité à répondre aux besoins fonctionnels et de performance. Ce modèle comprend plusieurs sous-critères qui influent sur la qualité du produit à différents niveaux.
+
+#### 1. **Functional Suitability**
+
+La **Functional Suitability** est la mesure dans laquelle un produit ou un système répond aux besoins fonctionnels spécifiés.
+
+| **Critère**                          | **Définition**                                                                                                                |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| **Functional completeness**           | Le degré auquel toutes les fonctionnalités attendues ont été implémentées et sont opérationnelles.                             |
+| **Functional correctness**           | L'exactitude des fonctionnalités, c'est-à-dire si elles fonctionnent comme prévu sans erreurs.                                 |
+| **Functional appropriateness**       | La pertinence des fonctionnalités par rapport aux besoins et au contexte de l'utilisateur.                                     |
+
+---
+
+#### 2. **Performance Efficiency**
+
+La **Performance Efficiency** évalue la performance d'un système en fonction des ressources utilisées (temps, mémoire, etc.).
+
+| **Critère**                          | **Définition**                                                                                                                |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| **Time behaviour**                    | Le temps nécessaire à l'exécution d'une tâche, une performance optimale étant souhaitée.                                        |
+| **Resource utilization**              | L'utilisation optimale des ressources, garantissant que le système fonctionne efficacement sans dépasser les limites spécifiées. |
+| **Capacity**                          | La capacité du système à supporter des charges de travail importantes sans dégradation de performance.                         |
+
+---
+
+#### 3. **Maintainability**
+
+La **Maintainability** se réfère à la facilité avec laquelle un système peut être modifié, corrigé ou mis à jour sans causer de nouveaux problèmes.
+
+| **Critère**                          | **Définition**                                                                                                                |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| **Modularity**                        | La division du système en modules indépendants, permettant une gestion plus facile des modifications sans affecter le reste du système. |
+| **Reusability**                       | La capacité à réutiliser des composants ou du code dans différents projets ou systèmes sans modifications importantes.             |
+| **Analysability**                     | La facilité avec laquelle on peut analyser un système pour en comprendre les erreurs ou pour l'améliorer.                      |
+| **Modifiability**                     | La capacité à modifier le système sans affecter négativement d'autres parties du système, tout en restant fonctionnel.           |
+| **Testability**                       | Le degré de facilité avec lequel le système peut être testé pour s'assurer de sa fiabilité et de sa conformité aux attentes.    |
+
+## Evaluation des critères de qualité ainsi que la scalabilité des différentes implémentations de la méthode de Monte Carlo
+
+## Pi.java
+
+analyse de la conception
+
+![pi_conception.jpg](images/pi_conception.jpg)
+
+le calcul de la scalabilité est un critère de **Qualité in use**, plus précisément c'est un critère de **Effeciency**.
+Car il sert à mesurer le speedup en fonction du temps d'exécution, en d'autres termes on mesure à quel point le
+programme
+va plus vite en fonction du nombre de processus.
+(pour un $S_p = 2$ on va deux fois **plus vite** que l'exécution à un seul processus
+tandis que $S_p$ = 0.5 on va deux fois **moins vite** que l'exécution à un seul processus)
+
+
+#### Analyse des mesures d'efficacité grâce à la norme ISO/IEC 25022
 
 la methode de Monte Carlo dans son essence même est une méthode probabiliste.
 C'est à dire que grâce à des lois de probabilité, on approxime $\pi$. Cela implique que
@@ -148,20 +230,7 @@ Partons du principe qu'on a un temps d'exécution voulu $\hat{T_p}$ pour $T_p$, 
 
 $X = \frac{\hat{T_p}}{T_p}$
 
-## Evaluation des speedup de différentes implémentation de la méthode de Monte Carlo
-
-### Pi.java
-
-analyse de la conception
-
-![pi_conception.jpg](images/pi_conception.jpg)
-
-le calcul de la scalabilité est un critère de **Qualité in use**, plus précisément c'est un critère de **Effeciency**.
-Car il sert à mesurer le speedup en fonction du temps d'exécution, en d'autres termes on mesure à quel point le
-programme
-va plus vite en fonction du nombre de processus.
-(pour un $S_p = 2$ on va deux fois **plus vite** que l'exécution à un seul processus
-tandis que $S_p$ = 0.5 on va deux fois **moins vite** que l'exécution à un seul processus)
+### Évaluation des scalabilités
 
 #### <u>Evaluation de la scalabilité forte de Pi.java sur ma machine :</u>
 
