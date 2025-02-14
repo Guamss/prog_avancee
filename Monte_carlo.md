@@ -309,7 +309,7 @@ comparé aux experience sur mon PC à 16 coeurs
 
 * Résultats expérimentaux :
   * Pour 2, 4 et 8 processus, le temps d’exécution reste relativement stable, le programme tien bien la charge jusqu'à 8 processus
-  * À partir de 9 processus, le temps d’exécution augmente de manière plus marquée, indiquant une dégradation des performances surement due aux temps .
+  * À partir de 9 processus, le temps d’exécution augmente de manière plus marquée, indiquant une dégradation des performances surement due aux temps d'accès mémoire.
   * Avec 16 processus, le temps d’exécution double quasiment par rapport à 1 seul processus.
 
 #### <u>Evaluation de la scalabilité faible de Pi.java sur la machine de l'IUT :</u>
@@ -345,6 +345,12 @@ comparé aux experience sur mon PC à 16 coeurs
 | Ma machine  | 0,50                       |
 | PC de l'IUT | 0,39                       |
 
+#### Analyse de la tendance de l'erreur sur `Assignment102`
+
+![erreur](images/tendance_erreur_pi.png)
+
+On observe que l'erreur diminue de manière assez constante en fonction du nombre de lancé, la methode de Monte Carlo étant une approche probabiliste de l'approximation de $\pi$ on remarque que les erreurs sont répartie de manière assez disparate, malgré une tendance à chaque palier.
+
 ### Assignment102
 
 #### <u>Evaluation de la scalabilité forte de Assignment102 sur ma machine :</u>
@@ -370,6 +376,15 @@ comparé aux experience sur mon PC à 16 coeurs
 
 ![Speedup_Scalabilite_forte_assigment102_monpc.png](images/Speedup_Scalabilite_forte_assigment102_monpc.png)
 
+Analyse du graphique :
+* Référence théorique (courbe attendue) :
+    * La courbe en pointillés représente le speedup idéal linéaire (speedup = nombre de processus).
+    * Si l’implémentation était parfaitement scalable, les points expérimentaux seraient alignés sur cette droite.
+
+* Résultats expérimentaux :
+    * Le speedup stagne à 1, on remarque une plus grande instabilitée à partir de $p=9$ surêment du à des temps d'accès mémoire
+    * Étant donné la tendance du speedup on peut avancer que `Assignment102` ne se parallèlise pas très bien 
+
 #### <u>Evaluation de la scalabilité forte de Assignment102 sur la machine de l'IUT :</u>
 
 | Erreur                | Ntotal   | Nprocessus | Temps (ms) |
@@ -391,7 +406,11 @@ comparé aux experience sur mon PC à 16 coeurs
 | 1.695147872205948E-4  | 10000000 | 15         | 4425       |
 | 9.633762972011859E-5  | 10000000 | 16         | 4023       |
 
-![Speedup_Scalabilite_forte_assigment102_machine_G26.png](images/Speedup_Scalabilite_forte_assigment102_machine_G26.png)
+![Speedup_Scalabilite_forte_assigment102_machine_G26.png](images/Speedup_Scalabilite_forte_assigment102_machine_G26.png)*
+
+* Résultats expérimentaux :
+    * À partir de $p=2$ le speedup est en chute libre, c'est surêment dû à l'architecture du pc de la machine (ses coeurs) et sa fréquence CPU qui comparé à ma machine tient moins bien la charge.
+    * Comme dit précédemment `Assignment102` ne se parallèlise pas très bien, on le voit d'autant plus sur cette machine.
 
 | Machine     | Valeur de $S_p$ à $p = 16$ |
 |-------------|----------------------------|
@@ -421,6 +440,13 @@ comparé aux experience sur mon PC à 16 coeurs
 
 ![Speedup_Scalabilite_faible_assigment102_monpc.png](images/Speedup_Scalabilite_faible_assigment102_monpc.png)
 
+* Référence théorique (courbe attendue) :
+  * La courbe en pointillés représente le speedup idéal linéaire (speedup = 1).
+  * Si l’implémentation était parfaitement scalable, les points expérimentaux seraient alignés sur cette droite.
+
+* Résultats expérimentaux :
+  * Sur la scalabilité faible on voit comment le programme tient la charge en fonction du nombre de processus, donc sans surprise sur `Assignment102` le speedup tend vers 0  
+
 #### <u>Evaluation de la scalabilité faible de Assignment102 sur la machine de l'IUT :</u>
 
 | Erreur                | Ntotal    | Nprocessus | Temps (ms) |
@@ -444,10 +470,26 @@ comparé aux experience sur mon PC à 16 coeurs
 
 ![Speedup_Scalabilite_faible_assigment102_machine_G26.png](images/Speedup_Scalabilite_faible_assigment102_machine_G26.png)
 
+* Référence théorique (courbe attendue) :
+  * La courbe en pointillés représente le speedup idéal linéaire (speedup = 1).
+  * Si l’implémentation était parfaitement scalable, les points expérimentaux seraient alignés sur cette droite.
+
+* Résultats expérimentaux :
+  * Résultat encore plus flagrant sur une machine de l'IUT pour raison d'architecture.
+
 | Machine     | Valeur de $S_p$ à $p = 16$ |
 |-------------|----------------------------|
 | Ma machine  | 0,05                       |
 | PC de l'IUT | 0,01                       |
+
+
+#### Analyse de la tendance de l'erreur sur `Assignment102`
+
+![erreur](images/tendance_erreur_assigment102.png)
+
+Pas beaucoup de différence étant donné que entre `Assignment102` et `Pi.java` on a les mêmes implémentation de monte carlo, seul le temps d'exécution change et la parallèlisation de l'implémentation.
+
+---
 
 pourquoi pas faire une section remarquue pour assigment102,
 comparer les graphiques actuels avec
