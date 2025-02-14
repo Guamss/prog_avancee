@@ -351,7 +351,12 @@ comparé aux experience sur mon PC à 16 coeurs
 
 On observe que l'erreur diminue de manière assez constante en fonction du nombre de lancé, la methode de Monte Carlo étant une approche probabiliste de l'approximation de $\pi$ on remarque que les erreurs sont répartie de manière assez disparate, malgré une tendance à chaque palier.
 
-### Assignment102
+## Assignment102
+
+analyse de la conception
+![conception_assignment102](images/assigment102.jpg)
+
+### Évaluation des scalabilités
 
 #### <u>Evaluation de la scalabilité forte de Assignment102 sur ma machine :</u>
 
@@ -512,4 +517,20 @@ double pi = 4 * (n_cible / n_total);
 
 normalement ça devrait avoir une meilleure parallèlisation
 
-### JAVA SOCKET vs Pi.java, c quoi la diff sur les perfs des processus lourds et léger 
+### JAVA SOCKET
+
+analyse de la conception
+
+[ici conception]
+
+### Évaluation des scalabilités
+
+
+#### <u> Évaluation de la scalabilité forte de Pi.java avec des sockets:</u>
+
+![](images/Speedup_Scalabilite_forte_piSocket_machine_G26.png)
+
+
+#### <u> Évaluation de la scalabilité faible de Pi.java avec des sockets:</u>
+
+![](images/Speedup_Scalabilite_faible_piSocket_machine_G26.png)
