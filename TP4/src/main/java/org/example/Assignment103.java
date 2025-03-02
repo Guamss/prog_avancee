@@ -4,12 +4,13 @@ package org.example;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
-class PiMonteCarlo {
+class PiMonteCarlo1 {
     AtomicInteger nAtomSuccess;
     int nThrows;
     double value;
@@ -19,13 +20,13 @@ class PiMonteCarlo {
         public void run() {
             double x = Math.random();
             double y = Math.random();
-            if (x * x + y * y <= 1)
-                nAtomSuccess.incrementAndGet();
+            if (x * x + y * y > 1)
+                nAtomSuccess.decrementAndGet();
         }
     }
 
-    public PiMonteCarlo(int i) {
-        this.nAtomSuccess = new AtomicInteger(0);
+    public PiMonteCarlo1(int i) {
+        this.nAtomSuccess = new AtomicInteger(i);
         this.nThrows = i;
         this.value = 0;
     }
@@ -44,20 +45,20 @@ class PiMonteCarlo {
     }
 }
 
-public class Assignment102 {
+public class Assignment103 {
 
     public static void main(String[] args) throws IOException {
         int nThrow = 10000000;
         int nProc = 16;
-        double value = 0;
         long startTime;
+        double value = 0;
         long stopTime;
         long timeDuration;
         ArrayList<Long> times = new ArrayList<>();
         for (int i = 1; i <= nProc; i++) {
             times.clear();
             for (int j = 0; j <= 10; j++) {
-                PiMonteCarlo PiVal = new PiMonteCarlo(nThrow*i);
+                PiMonteCarlo1 PiVal = new PiMonteCarlo1(nThrow*i);
                 startTime = System.currentTimeMillis();
                 value = PiVal.getPi(i);
                 stopTime = System.currentTimeMillis();
@@ -73,7 +74,7 @@ public class Assignment102 {
             System.out.println("Available processors: " + i);
             System.out.println("Time Duration: " + times.get(times.size() / 2) + "ms");
 
-            CsvOutput outputFile = new CsvOutput("./src/main/resources/output_assigment102_.csv");
+            CsvOutput outputFile = new CsvOutput("./src/main/resources/output_assigment103_.csv");
             outputFile.write(error, nThrow*i, i, times.get(times.size() / 2));
         }
     }

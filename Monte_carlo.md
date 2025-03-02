@@ -32,18 +32,16 @@ Afin d'illustrer une implémentation possible de cette méthode, j'ai
 réalisé un pseudo-code en python :
 
 ```java
-    int n_total = 100000;
+int n_total = 100000;
 int n_cible = 0;
-    for(
-int i = 0;
-i <=n_total;i++){
-double x = Math.random();
-double y = Math.random();
-double d = Math.pow(x, 2) + Math.pow(y, 2);
-        if(d <=1){
-n_cible ++;
-        }
-        }
+for (int i = 0; i <=n_total; i++) {
+  double x = Math.random();
+  double y = Math.random();
+  double d = Math.pow(x, 2) + Math.pow(y, 2);
+  if ( d <=1 ) {
+    n_cible ++;
+  }
+}
 double pi = 4 * (n_cible / n_total);
 ```
 
@@ -142,7 +140,7 @@ récapitulatif des critères de qualité dans ce modèle :
 
 | **Critère**                           | **Définition**                                                                                                                                 |
 |---------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Efficiency**                        | La capacité du système à permettre à l'utilisateur d'accomplir ses tâches avec un minimum de ressources (temps, effort, etc.).                 |
+| **Efficiency**                        | La capacité du système à permettre à l'utilisateur d'accomplir ses tâches avec les resources appropriées à celles-ci                           |
 | **Effectiveness**                     | La capacité du système à permettre à l'utilisateur d'atteindre ses objectifs de manière correcte et complète.                                  |
 | **Usefulness**                        | Mesure dans laquelle le logiciel remplit ses fonctions de manière utile (ex. StarUML est plus utile pour créer des diagrammes que Excalidraw). |
 | **Trust**                             | La confiance de l'utilisateur dans la stabilité et la fiabilité du logiciel (ex. absence de crashs inattendus).                                |
@@ -171,8 +169,6 @@ spécifiés.
 | **Functional correctness**     | L'exactitude des fonctionnalités, c'est-à-dire si elles fonctionnent comme prévu sans erreurs.     |
 | **Functional appropriateness** | La pertinence des fonctionnalités par rapport aux besoins et au contexte de l'utilisateur.         |
 
----
-
 #### 2. **Performance Efficiency**
 
 La **Performance Efficiency** évalue la performance d'un système en fonction des ressources utilisées (temps, mémoire,
@@ -183,8 +179,6 @@ etc.).
 | **Time behaviour**       | Le temps nécessaire à l'exécution d'une tâche, une performance optimale étant souhaitée.                                         |
 | **Resource utilization** | L'utilisation optimale des ressources, garantissant que le système fonctionne efficacement sans dépasser les limites spécifiées. |
 | **Capacity**             | La capacité du système à supporter des charges de travail importantes sans dégradation de performance.                           |
-
----
 
 #### 3. **Maintainability**
 
@@ -201,7 +195,7 @@ causer de nouveaux problèmes.
 
 ## Analyse des mesures d'efficacité grâce à la norme ISO/IEC 25022
 
-le calcul de la scalabilité est un critère de **Qualité in use**, plus précisément c'est un critère de **Effeciency**.
+le calcul de la scalabilité est un critère de **Quality in use**, plus précisément c'est un critère de **Effeciency**.
 Car il sert à mesurer le speedup en fonction du temps d'exécution, en d'autres termes on mesure à quel point le
 programme
 va plus vite en fonction du nombre de processus.
@@ -229,7 +223,9 @@ $X = \frac{\hat{T_p}}{T_p}$
 
 ## Pi.java
 
-analyse de la conception
+Pi.java implémente la méthode de Monte Carlo avec un modèle Master/Worker en mémoire partagée.
+* Le Master distribue les tâches à N Workers via un FixedThreadPool.
+* Chaque Worker effectue une simulation et renvoie son résultat au Master, qui agrège les données.
 
 ![pi_conception.jpg](images/pi_conception.jpg)
 
@@ -309,7 +305,7 @@ comparé aux experience sur mon PC à 16 coeurs
 
 * Résultats expérimentaux :
   * Pour 2, 4 et 8 processus, le temps d’exécution reste relativement stable, le programme tien bien la charge jusqu'à 8 processus
-  * À partir de 9 processus, le temps d’exécution augmente de manière plus marquée, indiquant une dégradation des performances surement due aux temps d'accès mémoire.
+  * À partir de 9 processus, le temps d’exécution augmente de manière plus marquée, indiquant une dégradation des performances surement due aux temps .
   * Avec 16 processus, le temps d’exécution double quasiment par rapport à 1 seul processus.
 
 #### <u>Evaluation de la scalabilité faible de Pi.java sur la machine de l'IUT :</u>
@@ -345,18 +341,7 @@ comparé aux experience sur mon PC à 16 coeurs
 | Ma machine  | 0,50                       |
 | PC de l'IUT | 0,39                       |
 
-#### Analyse de la tendance de l'erreur sur `Assignment102`
-
-![erreur](images/tendance_erreur_pi.png)
-
-On observe que l'erreur diminue de manière assez constante en fonction du nombre de lancé, la methode de Monte Carlo étant une approche probabiliste de l'approximation de $\pi$ on remarque que les erreurs sont répartie de manière assez disparate, malgré une tendance à chaque palier.
-
 ## Assignment102
-
-analyse de la conception
-![conception_assignment102](images/assigment102.jpg)
-
-### Évaluation des scalabilités
 
 #### <u>Evaluation de la scalabilité forte de Assignment102 sur ma machine :</u>
 
@@ -381,15 +366,6 @@ analyse de la conception
 
 ![Speedup_Scalabilite_forte_assigment102_monpc.png](images/Speedup_Scalabilite_forte_assigment102_monpc.png)
 
-Analyse du graphique :
-* Référence théorique (courbe attendue) :
-    * La courbe en pointillés représente le speedup idéal linéaire (speedup = nombre de processus).
-    * Si l’implémentation était parfaitement scalable, les points expérimentaux seraient alignés sur cette droite.
-
-* Résultats expérimentaux :
-    * Le speedup stagne à 1, on remarque une plus grande instabilitée à partir de $p=9$ surêment du à des temps d'accès mémoire
-    * Étant donné la tendance du speedup on peut avancer que `Assignment102` ne se parallèlise pas très bien 
-
 #### <u>Evaluation de la scalabilité forte de Assignment102 sur la machine de l'IUT :</u>
 
 | Erreur                | Ntotal   | Nprocessus | Temps (ms) |
@@ -411,11 +387,7 @@ Analyse du graphique :
 | 1.695147872205948E-4  | 10000000 | 15         | 4425       |
 | 9.633762972011859E-5  | 10000000 | 16         | 4023       |
 
-![Speedup_Scalabilite_forte_assigment102_machine_G26.png](images/Speedup_Scalabilite_forte_assigment102_machine_G26.png)*
-
-* Résultats expérimentaux :
-    * À partir de $p=2$ le speedup est en chute libre, c'est surêment dû à l'architecture du pc de la machine (ses coeurs) et sa fréquence CPU qui comparé à ma machine tient moins bien la charge.
-    * Comme dit précédemment `Assignment102` ne se parallèlise pas très bien, on le voit d'autant plus sur cette machine.
+![Speedup_Scalabilite_forte_assigment102_machine_G26.png](images/Speedup_Scalabilite_forte_assigment102_machine_G26.png)
 
 | Machine     | Valeur de $S_p$ à $p = 16$ |
 |-------------|----------------------------|
@@ -445,13 +417,6 @@ Analyse du graphique :
 
 ![Speedup_Scalabilite_faible_assigment102_monpc.png](images/Speedup_Scalabilite_faible_assigment102_monpc.png)
 
-* Référence théorique (courbe attendue) :
-  * La courbe en pointillés représente le speedup idéal linéaire (speedup = 1).
-  * Si l’implémentation était parfaitement scalable, les points expérimentaux seraient alignés sur cette droite.
-
-* Résultats expérimentaux :
-  * Sur la scalabilité faible on voit comment le programme tient la charge en fonction du nombre de processus, donc sans surprise sur `Assignment102` le speedup tend vers 0  
-
 #### <u>Evaluation de la scalabilité faible de Assignment102 sur la machine de l'IUT :</u>
 
 | Erreur                | Ntotal    | Nprocessus | Temps (ms) |
@@ -475,62 +440,131 @@ Analyse du graphique :
 
 ![Speedup_Scalabilite_faible_assigment102_machine_G26.png](images/Speedup_Scalabilite_faible_assigment102_machine_G26.png)
 
-* Référence théorique (courbe attendue) :
-  * La courbe en pointillés représente le speedup idéal linéaire (speedup = 1).
-  * Si l’implémentation était parfaitement scalable, les points expérimentaux seraient alignés sur cette droite.
-
-* Résultats expérimentaux :
-  * Résultat encore plus flagrant sur une machine de l'IUT pour raison d'architecture.
-
 | Machine     | Valeur de $S_p$ à $p = 16$ |
 |-------------|----------------------------|
 | Ma machine  | 0,05                       |
 | PC de l'IUT | 0,01                       |
 
-
-#### Analyse de la tendance de l'erreur sur `Assignment102`
-
-![erreur](images/tendance_erreur_assigment102.png)
-
-Pas beaucoup de différence étant donné que entre `Assignment102` et `Pi.java` on a les mêmes implémentation de monte carlo, seul le temps d'exécution change et la parallèlisation de l'implémentation.
-
----
-
-pourquoi pas faire une section remarquue pour assigment102,
-comparer les graphiques actuels avec
+## Comparaison d'Assignment102 avec une implémentation légèrement "améliorée"
 
 ```java
 int n_total = 100000;
 int n_cible = n_total;
-for(
-int i = 0;
-i <=n_total;i++){
-double x = Math.random();
-double y = Math.random();
-double d = Math.pow(x, 2) + Math.pow(y, 2);
-    if(d <=1){
-n_cible --;
-        }
-        }
+for(int i = 0; i <= n_total; i++) {
+  double x = Math.random();
+  double y = Math.random();
+  double d = Math.pow(x, 2) + Math.pow(y, 2);
+  if(d <=1) {
+    n_cible --;
+  }
+}
 double pi = 4 * (n_cible / n_total);
 ```
+J'ai créé une version "améliorée" de `assignment102` que j'ai appelé `assignment103`, cette implémentation est censé mieux se parallèliser que la version initiale de `assignment102`.
 
-normalement ça devrait avoir une meilleure parallèlisation
+Voici les resultats obtenu sur ma machine concernant sur une scalabilité faible avec `assignment102` : 
+| Erreur                | Ntotal    | Nprocessus | Temps(ms) |
+|----------------------|-----------|------------|-----------|
+| 6.0559598513091885E-5 | 10000000  | 1          | 636       |
+| 3.0383821302919632E-5 | 20000000  | 2          | 1287      |
+| 8.83586619065453E-5   | 30000000  | 3          | 2046      |
+| 7.784382533285632E-5  | 40000000  | 4          | 2801      |
+| 6.387002132935714E-5  | 50000000  | 5          | 3469      |
+| 5.746636112186545E-6  | 60000000  | 6          | 4244      |
+| 5.794370903953075E-6  | 70000000  | 7          | 5076      |
+| 8.411224475744872E-5  | 80000000  | 8          | 5830      |
+| 2.1994587413659557E-5 | 90000000  | 9          | 6732      |
+| 2.497663410214569E-5  | 100000000 | 10         | 7394      |
+| 1.643332306673832E-6  | 110000000 | 11         | 8272      |
+| 8.643819225988911E-5  | 120000000 | 12         | 8932      |
+| 4.5858578846601335E-5 | 130000000 | 13         | 9739      |
+| 6.790117698253307E-5  | 140000000 | 14         | 10458     |
+| 2.668293835952506E-5  | 150000000 | 15         | 11886     |
+| 5.5593964288694E-5    | 160000000 | 16         | 12738     |
 
-### JAVA SOCKET
 
-analyse de la conception
+Et voici `assignment103` avec aussi un speedup avec scalabilité faible :
+| Erreur                | Ntotal    | Nprocessus | Temps(ms) |
+|----------------------|-----------|------------|-----------|
+| 1.2902576969798323E-4 | 10000000  | 1          | 588       |
+| 1.1482914877409597E-4 | 20000000  | 2          | 1344      |
+| 4.434701497684959E-5  | 30000000  | 3          | 2003      |
+| 3.060435288988145E-5  | 40000000  | 4          | 2656      |
+| 3.730159289519722E-5  | 50000000  | 5          | 3335      |
+| 1.589843614822685E-5  | 60000000  | 6          | 4204      |
+| 2.3999434442858324E-5 | 70000000  | 7          | 4939      |
+| 5.465495012436297E-5  | 80000000  | 8          | 5553      |
+| 4.3096247534454416E-5 | 90000000  | 9          | 6458      |
+| 1.9446693613676406E-5 | 100000000 | 10         | 7204      |
+| 5.90664357742553E-5   | 110000000 | 11         | 7941      |
+| 6.621490415765105E-5  | 120000000 | 12         | 8620      |
+| 1.799928139699426E-5  | 130000000 | 13         | 9574      |
+| 1.9790911327917317E-5 | 140000000 | 14         | 10355     |
+| 1.5834937438437065E-5 | 150000000 | 15         | 11169     |
+| 2.3452623531267063E-5 | 160000000 | 16         | 12198     |
 
-[ici conception]
+On remarque que `assignment103` se parallèlise légèrement mieux que `assignment102` car le temps médian plus court. Néanmoins si le Speedup reste sensiblement le même.
 
-### Évaluation des scalabilités
+Speedup scalabilité faible de `assignment103` :
 
+![](images/Speedup_Scalabilite_faible_assignment103_monpc.png)
 
-#### <u> Évaluation de la scalabilité forte de Pi.java avec des sockets:</u>
+Speedup scalabilité faible de `assignment102` :
 
-![](images/Speedup_Scalabilite_forte_piSocket_machine_G26.png)
+![](images/Speedup_Scalabilite_faible_assignment102_monpc.png)
 
+### Pourquoi assignment103 est plus rapide ? 
 
-#### <u> Évaluation de la scalabilité faible de Pi.java avec des sockets:</u>
+Un point généré aléatoirement a une probabilité de :  
 
-![](images/Speedup_Scalabilite_faible_piSocket_machine_G26.png)
+$p_{\text{cercle}} = \frac{\pi}{4} \approx 0.785$ 
+
+de tomber à l'intérieur du cercle, et donc une probabilité de :  
+
+$\overline{p_{\text{cercle}}} = 1 - \frac{\pi}{4} \approx 0.215$  
+
+de tomber à l'extérieur.
+
+Dans `assignment102`, on **incrémente** `n_cible` chaque fois qu’un point tombe **dans** le cercle.  
+
+Dans `assignment103`, au lieu d’incrémenter, on **décrémente** `n_cible` lorsqu’un point tombe **dans** le cercle.  
+
+Cela signifie que :  
+- On modifie `n_cible` **moins souvent** dans `assignment103` car $( 1 - \frac{\pi}{4})$ est **inférieur** à $(\frac{\pi}{4})$.  
+- Moins d’accès concurrents = moins de contention entre les threads.  
+- Moins de contention = un **meilleur temps d'exécution**
+
+Grâce à cette inversion de logique, `assignment103` **accède à la ressource critique moins souvent** que `assignment102`, ce qui réduit le **goulot d’étranglement** et améliore la parallélisation. C'est pourquoi `assignment103` est plus rapide !
+
+## Evaluation du critère de product quality model : Functional correctness 
+
+On remarque sur ce graphique, la tendance de l'erreur sur l'apporximation de $\pi$ grâce à la méthode de monte carlo
+
+![tendance de l'erreur](images/tendance_erreur_monte_carlo.png)
+
+La dispersion des points rouges montre que l'erreur varie selon les expériences, ce qui est dû à la nature aléatoire de la méthode.
+
+Ce graphique confirme que l'approximation de $\pi$ avec monte carlo s'améliore avec le nombre de points, mais avec une convergence relativement lente. Pour obtenir une bonne précision, il faut un très grand nombre de points. Ce qui en fait une méthode intéressante à parallèliser mais pas une bonne méthode pour approximer $\pi$.
+
+## Mise en oeuvre de la méthode de monte carlo en mémoire distribuée
+
+C'est concrètement la même implémentation que `Pi.java` mais en mémoire distribuée. C'est à dire : 
+* Un master qui stocke les adresses/ports des workers
+* Des workers qui se voient attribuer une tâche via un message du master depuis le réseau
+* Les workers renvoient leurs calcul au master, qui se charge ensuite d'approximer $\pi$.
+
+![master worker socket](images/MASTER.jpg)
+
+### Pourquoi c'est plus puissant que Pi.java ?
+
+`Pi.java` est limité aux ressources de la machine sur laquelle il tourne. En revanche, une exécution distribuée via des sockets permet d'exploiter la puissance de plusieurs machines simultanément, rendant possible des calculs bien plus lourds.
+
+Cependant, la communication interprocessus en local est beaucoup plus rapide qu'un échange réseau. Résultat : pour de petits calculs, Pi.java sera plus rapide, car le coût des transmissions réseau devient significatif.
+
+## Une expérience idéale
+
+Afin de se rapprocher le plus possible de la courbe idéale (constante pour une scalabilité faible et linéaire pour une scalabilité forte) on pourrait profiter au maximum des capacités des postes de la G26 avec : 
+* 8 workers par postes (car ils ont 8 coeurs physique non hyperthreadé)
+* 1 master sur un des PC qui va communiquer à chacun des postes
+
+Donc pour 20 postes on va avoir 160 workers simultané. Mais pour l'instant cette expérience n'a pas encore été réalisée 
