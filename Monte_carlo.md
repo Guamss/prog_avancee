@@ -343,6 +343,17 @@ comparé aux experience sur mon PC à 16 coeurs
 
 ## Assignment102
 
+* PiMonteCarlo : Gère le calcul de Pi avec un compteur atomique nAtomSuccess pour compter les succès des simulations (points dans le cercle).
+* MonteCarlo : Chaque Worker génère deux nombres aléatoires et vérifie s'ils sont dans le cercle unité. Si oui, incrémente le compteur atomique.
+* getPi : Crée un ExecutorService avec des threads, distribue les tâches de simulation, attend que tous les threads terminent, puis calcule Pi en fonction du nombre de succès.
+* Main : Lance plusieurs tests avec différents nombres de threads, mesure le temps, trie les résultats et calcule l'erreur par rapport à Pi exact. Sauvegarde dans un fichier CSV.
+
+Master/Worker : Le Master distribue les tâches aux Workers via un pool de threads. La mémoire partagée est sécurisée avec AtomicInteger.
+
+![assigment102.jpg](images/assignment102.jpg)
+
+### Évaluation des scalabilités
+
 #### <u>Evaluation de la scalabilité forte de Assignment102 sur ma machine :</u>
 
 | Erreur                | Ntotal   | Nprocessus | Temps (ms) |
@@ -555,13 +566,67 @@ C'est concrètement la même implémentation que `Pi.java` mais en mémoire dist
 
 ![master worker socket](images/MASTER.jpg)
 
+MasterSocket.java :
+
+* Le Master distribue des tâches aux Workers via des sockets pour calculer Pi avec Monte Carlo.
+* Il envoie le nombre de simulations à chaque Worker, récupère les résultats, calcule Pi et mesure le temps.
+* Les résultats sont enregistrés dans un fichier CSV.
+
+WorkerSocket.java :
+
+* Le Worker effectue les simulations de Monte Carlo pour Pi, renvoie les résultats au Master et termine sur "END".
+
+Communication : Le Master envoie les tâches, le Worker renvoie les résultats. Le Master calcule Pi et affiche l’erreur.
+
+![images/img.png](images/img.png)
+
 ### Pourquoi c'est plus puissant que Pi.java ?
 
 `Pi.java` est limité aux ressources de la machine sur laquelle il tourne. En revanche, une exécution distribuée via des sockets permet d'exploiter la puissance de plusieurs machines simultanément, rendant possible des calculs bien plus lourds.
 
 Cependant, la communication interprocessus en local est beaucoup plus rapide qu'un échange réseau. Résultat : pour de petits calculs, Pi.java sera plus rapide, car le coût des transmissions réseau devient significatif.
 
-## Une expérience idéale
+### Une expérience sur un seul poste
+
+sur un poste en G26, voici une expérience sur scalabilité faible : 
+| Erreur             | Ntotal    | Nprocessus | Temps(ms) |
+|--------------------|----------|------------|-----------|
+| 1.130170677561341E-4 | 10000000  | 1          | 313       |
+| 1.3068098110611585E-4 | 20000000  | 2          | 314       |
+| 1.0623478184706319E-4 | 30000000  | 3          | 317       |
+| 7.882830064682255E-5  | 40000000  | 4          | 314       |
+| 1.760049627372199E-5  | 50000000  | 5          | 330       |
+| 4.6617625498158996E-5 | 60000000  | 6          | 340       |
+| 2.8454688638684975E-6 | 70000000  | 7          | 345       |
+| 1.1680495540174178E-4 | 80000000  | 8          | 356       |
+| 3.477774917551441E-5  | 90000000  | 9          | 486       |
+| 4.368052301442607E-5  | 100000000 | 10         | 506       |
+| 8.302709741817549E-5  | 110000000 | 11         | 580       |
+| 3.1294024310042724E-5 | 120000000 | 12         | 583       |
+| 7.751327275885928E-5  | 130000000 | 13         | 611       |
+| 5.636926453449467E-5  | 140000000 | 14         | 675       |
+| 2.944162403974611E-5  | 150000000 | 15         | 690       |
+| 1.7617309533633406E-5 | 160000000 | 16         | 753       |
+
+donc le speedup donne ça 
+![](images/Speedup_Scalabilite_faible_piSocket_machine_G26.png)
+
+et toujours un poste en G26, voici une expérience sur scalabilité forte : 
+| Erreur             | Ntotal    | Nprocessus | Temps(ms) |
+|--------------------|----------|------------|-----------|
+| 8.817616423835061E-5  | 100000000 | 1          | 3060      |
+| 7.175137411128947E-5  | 100000000 | 2          | 1553      |
+| 4.374418499155864E-5  | 100000000 | 4          | 800       |
+| 1.1437078253809122E-4 | 100000000 | 8          | 425       |
+| 5.0386414550711726E-5 | 100000000 | 16         | 486       |
+
+et le speedup donne ça : 
+![](images/Speedup_Scalabilite_forte_piSocket_machine_G26.png)
+
+On peut donc affirmer que l'implémentation de la méthode de monte carlo avec les sockets n'est pas utile sur un seule poste, en fait elle perd son intéret principale : la mémoire distribuée. 
+
+En effet l'intérêt de la communication des sockets sont de pouvoir faire communiquer plusieurs machines entre elles, donc d'utiliser les ressources de plusieurs machines simultanément.
+### Une expérience idéale
 
 Afin de se rapprocher le plus possible de la courbe idéale (constante pour une scalabilité faible et linéaire pour une scalabilité forte) on pourrait profiter au maximum des capacités des postes de la G26 avec : 
 * 8 workers par postes (car ils ont 8 coeurs physique non hyperthreadé)
