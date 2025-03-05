@@ -633,3 +633,26 @@ Afin de se rapprocher le plus possible de la courbe idéale (constante pour une 
 * 1 master sur un des PC qui va communiquer à chacun des postes
 
 Donc pour 20 postes on va avoir 160 workers simultané. Mais pour l'instant cette expérience n'a pas encore été réalisée 
+
+### Déroulé de l'expérience
+
+L'expérience a finalement été réalisée de 1 poste à 16 postes, pour chacun des postes on a : 
+* 4 Workers
+* $2\times10^9$ itérations
+
+Donc l'expérience a eu lieu avec : 
+* 1 postes ($4\times1 = 4$ workers)
+* 2 postes ($4\times2 = 8$ workers)
+* 4 postes ($4\times4 = 16$ workers)
+* 8 postes ($4\times8 = 32$ workers)
+* 16 postes ($4\times16 = 64$ workers)
+
+| Erreur              | Ntotal       | Nprocessus | Temps (ms) |
+|---------------------|-------------|------------|------------|
+| 0.00000567         | 2 000 000 000  | 1          | 68 974     |
+| 4.610508550924495E-6 | 16 000 000 000 | 8          | 70 450     |
+| 1.2763940615949628E-6 | 32 000 000 000 | 16         | 70 485     |
+| 2.8263219557848443E-6 | 64 000 000 000 | 32         | 71 908     |
+| 1.3741649324992772E-6 | 128 000 000 000 | 64         | 72 120     |
+
+![Speedup_faible_javasocket.png](images/Speedup_faible_javasocket.png)
